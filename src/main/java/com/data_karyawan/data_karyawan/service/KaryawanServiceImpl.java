@@ -15,13 +15,16 @@ public class KaryawanServiceImpl implements KaryawanService {
     private KaryawanRepository karyawanRepository;
 
     @Override
-    public List<Karyawan> findAll() {
-        return karyawanRepository.findAll();
+    public List<Karyawan> findByNikList(Long nik) {
+        return karyawanRepository.findByNikList(nik);
     }
 
     @Override
-    public List<Karyawan> findByNikList(Long nik) {
-        return karyawanRepository.findByNikList(nik);
+    public List<Karyawan> findByParams(String name, Long nik) {
+        if (name != null && nik != null) return karyawanRepository.findByNikAndNameParamList(name, nik);
+        else if (name != null) return karyawanRepository.findByNameParamList(name);
+        else if (nik != null)return karyawanRepository.findByNikParamList(nik);
+        else return karyawanRepository.findAll();
     }
 
     @Override
@@ -32,7 +35,6 @@ public class KaryawanServiceImpl implements KaryawanService {
     @Override
     public Karyawan updateKaryawan(Long nik, Karyawan karyawan) {
         Karyawan karyawanExists = karyawanRepository.findByNik(nik);
-        karyawanExists.setNik(karyawan.getNik());
         karyawanExists.setName(karyawan.getName());
         karyawanExists.setUmur(karyawan.getUmur());
         karyawanExists.setJenis_kelamin(karyawan.getJenis_kelamin());

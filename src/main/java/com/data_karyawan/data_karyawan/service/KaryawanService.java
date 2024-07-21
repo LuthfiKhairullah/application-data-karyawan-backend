@@ -7,8 +7,8 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface KaryawanService {
-    List<Karyawan> findAll();
     List<Karyawan> findByNikList(Long nik);
+    List<Karyawan> findByParams(String name, Long nik);
     Karyawan createKaryawan(Karyawan karyawan);
     Karyawan updateKaryawan(Long nik, Karyawan karyawan);
     void deleteKaryawan(Long nik);

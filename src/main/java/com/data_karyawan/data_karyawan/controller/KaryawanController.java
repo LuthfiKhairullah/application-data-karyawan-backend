@@ -17,17 +17,52 @@ import java.util.List;
 public class KaryawanController {
     private KaryawanService karyawanService;
 
+    @GetMapping("/get_karyawan/{nik}")
+    public ResponseEntity<Object> findKaryawanByNik(@PathVariable("nik") Long nik) {
+        List<Karyawan> karyawanList = karyawanService.findByNikList(nik);
+        if(karyawanList.isEmpty()) {
+            return new ResponseEntity<>(
+                    new ResponseBodyUtil(
+                            "error",
+                            "NIK Karyawan is not exists"
+                    ), HttpStatus.BAD_REQUEST);
+        } else {
+            return new ResponseEntity<>(
+                    new ResponseBodyUtil(
+                            "success",
+                            "Successfully get data karyawan",
+                            karyawanList
+                    ),
+                    HttpStatus.OK);
+        }
+    }
+
     @GetMapping("/get_karyawan")
-    public ResponseEntity<Object> findAllKaryawan() {
-        List<Karyawan> karyawanList = karyawanService.findAll();
-        return new ResponseEntity<>(
-                new ResponseBodyUtil(
-                        "success",
-                        "Successfully get all data karyawan",
-                        karyawanList
-                ),
-                HttpStatus.OK
-        );
+    public ResponseEntity<Object> findKaryawanByParam(
+        @RequestParam(value = "name", required = false) String name,
+        @RequestParam(value = "nik", required = false) Long nik) {
+        List<Karyawan> karyawanList = karyawanService.findByParams(name, nik);
+        if(karyawanList.isEmpty()) {
+            String message = "";
+            if (name != null && nik != null) message = "Data Karyawan is not found";
+            else if (name != null) message = "Name Karyawan is not found";
+            else if (nik != null) message = "NIK Karyawan is not found";
+            else message = "Data Karyawan is not found";
+            return new ResponseEntity<>(
+                    new ResponseBodyUtil(
+                            "success",
+                            message,
+                            karyawanList
+                    ), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(
+                    new ResponseBodyUtil(
+                            "success",
+                            "Successfully get data karyawan",
+                            karyawanList
+                    ),
+                    HttpStatus.OK);
+        }
     }
 
     @PostMapping("/add_karyawan")

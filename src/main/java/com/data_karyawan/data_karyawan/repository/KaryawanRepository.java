@@ -13,4 +13,10 @@ public interface KaryawanRepository extends JpaRepository<Karyawan, String> {
     List<Karyawan> findByNikList(@Param("nik") Long nik);
     @Query("SELECT k FROM Karyawan k WHERE k.nik = :nik")
     Karyawan findByNik(@Param("nik") Long nik);
+    @Query("SELECT k FROM Karyawan k WHERE CAST(k.nik AS string) LIKE %:nik% AND k.name LIKE %:name%")
+    List<Karyawan> findByNikAndNameParamList(@Param("name") String name, @Param("nik") Long nik);
+    @Query("SELECT k FROM Karyawan k WHERE CAST(k.nik AS string) LIKE %:nik%")
+    List<Karyawan> findByNikParamList(@Param("nik") Long nik);
+    @Query("SELECT k FROM Karyawan k WHERE k.name LIKE %:name%")
+    List<Karyawan> findByNameParamList(@Param("name") String name);
 }
