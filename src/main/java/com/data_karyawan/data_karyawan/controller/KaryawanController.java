@@ -19,7 +19,7 @@ public class KaryawanController {
     private KaryawanService karyawanService;
 
     @GetMapping("/get_karyawan/{nik}")
-    public ResponseEntity<Object> findKaryawanByNik(@PathVariable("nik") Long nik) {
+    public ResponseEntity<Object> findKaryawanByNik(@PathVariable("nik") String nik) {
         List<Karyawan> karyawanList = karyawanService.findByNikList(nik);
         if(karyawanList.isEmpty()) {
             return new ResponseEntity<>(
@@ -41,7 +41,7 @@ public class KaryawanController {
     @GetMapping("/get_karyawan")
     public ResponseEntity<Object> findKaryawanByParam(
         @RequestParam(value = "name", required = false) String name,
-        @RequestParam(value = "nik", required = false) Long nik) {
+        @RequestParam(value = "nik", required = false) String nik) {
         List<Karyawan> karyawanList = karyawanService.findByParams(name, nik);
         if(karyawanList.isEmpty()) {
             String message = "";
@@ -70,12 +70,23 @@ public class KaryawanController {
     public ResponseEntity<Object> addKaryawan(@RequestBody Karyawan karyawan) {
         List<Karyawan> karyawanList = karyawanService.findByNikList(karyawan.getNik());
         if(karyawanList.isEmpty()) {
-            Karyawan karyawanResult = karyawanService.createKaryawan(karyawan);
-            return new ResponseEntity<>(
-                new ResponseBodyUtil(
-                    "success",
-                    "Karyawan has been successfully added"
-                ), HttpStatus.OK);
+            if(karyawan.getName() != "" && karyawan.getNik() != "") {
+                Karyawan karyawanResult = karyawanService.createKaryawan(karyawan);
+                return new ResponseEntity<>(
+                    new ResponseBodyUtil(
+                        "success",
+                        "Karyawan has been successfully added"
+                    ), HttpStatus.OK);
+            } else {
+                String message = "";
+                if (karyawan.getName() == "") message = "Name Karyawan is required";
+                else if (karyawan.getNik() == "") message = "Name Karyawan is required";
+                return new ResponseEntity<>(
+                        new ResponseBodyUtil(
+                                "error",
+                                message
+                        ), HttpStatus.BAD_REQUEST);
+            }
         } else {
             return new ResponseEntity<>(
                 new ResponseBodyUtil(
@@ -86,7 +97,7 @@ public class KaryawanController {
     }
 
     @PutMapping("/update_karyawan/{nik}")
-    public ResponseEntity<Object> updateKaryawan(@PathVariable("nik") Long nik, @RequestBody Karyawan karyawan) {
+    public ResponseEntity<Object> updateKaryawan(@PathVariable("nik") String nik, @RequestBody Karyawan karyawan) {
         List<Karyawan> karyawanList = karyawanService.findByNikList(nik);
         if(karyawanList.isEmpty()) {
             return new ResponseEntity<>(
@@ -105,7 +116,7 @@ public class KaryawanController {
     }
 
     @DeleteMapping("/delete_karyawan/{nik}")
-    public ResponseEntity<Object> deleteKaryawanById(@PathVariable("nik") Long nik) {
+    public ResponseEntity<Object> deleteKaryawanById(@PathVariable("nik") String nik) {
         List<Karyawan> karyawanList = karyawanService.findByNikList(nik);
         if(karyawanList.isEmpty()) {
             return new ResponseEntity<>(

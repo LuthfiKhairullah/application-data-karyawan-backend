@@ -19,7 +19,7 @@ public class Karyawan {
 
     @Id
     @Column(nullable = false)
-    private Long nik;
+    private String nik;
 
     @Column(nullable = false)
     private String name;
@@ -33,4 +33,7 @@ public class Karyawan {
     private String alamat;
 
     private String negara;
+
+    @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    private LocalDateTime created_at;
 }

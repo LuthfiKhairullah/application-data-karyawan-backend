@@ -3,6 +3,7 @@ package com.data_karyawan.data_karyawan.service;
 import com.data_karyawan.data_karyawan.model.Karyawan;
 import com.data_karyawan.data_karyawan.repository.KaryawanRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,16 +16,16 @@ public class KaryawanServiceImpl implements KaryawanService {
     private KaryawanRepository karyawanRepository;
 
     @Override
-    public List<Karyawan> findByNikList(Long nik) {
+    public List<Karyawan> findByNikList(String nik) {
         return karyawanRepository.findByNikList(nik);
     }
 
     @Override
-    public List<Karyawan> findByParams(String name, Long nik) {
+    public List<Karyawan> findByParams(String name, String nik) {
         if (name != null && nik != null) return karyawanRepository.findByNikAndNameParamList(name, nik);
         else if (name != null) return karyawanRepository.findByNameParamList(name);
         else if (nik != null)return karyawanRepository.findByNikParamList(nik);
-        else return karyawanRepository.findAll();
+        else return karyawanRepository.findAllOrderByCreatedAt();
     }
 
     @Override
@@ -33,7 +34,7 @@ public class KaryawanServiceImpl implements KaryawanService {
     }
 
     @Override
-    public Karyawan updateKaryawan(Long nik, Karyawan karyawan) {
+    public Karyawan updateKaryawan(String nik, Karyawan karyawan) {
         Karyawan karyawanExists = karyawanRepository.findByNik(nik);
         karyawanExists.setName(karyawan.getName());
         karyawanExists.setUmur(karyawan.getUmur());
@@ -46,7 +47,7 @@ public class KaryawanServiceImpl implements KaryawanService {
     }
 
     @Override
-    public void deleteKaryawan(Long nik) {
+    public void deleteKaryawan(String nik) {
         karyawanRepository.deleteById(nik.toString());
     }
 }
