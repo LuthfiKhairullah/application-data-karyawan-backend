@@ -14,6 +14,7 @@ import java.util.List;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api/karyawan")
+@CrossOrigin(origins = {"http://localhost:8080", "https://application-data-karyawan-frontend-web.vercel.app"})
 public class KaryawanController {
     private KaryawanService karyawanService;
 
